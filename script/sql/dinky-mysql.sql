@@ -1415,6 +1415,32 @@ CREATE TABLE `dinky_udf_template`  (
                                      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'udf template' ROW_FORMAT = Dynamic;
 
+
+CREATE TABLE `dw_dinky_tenant`  (
+                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+                                         `dw_tenant_id` bigint NULL DEFAULT NULL COMMENT 'DW域-租户ID',
+                                         `dw_tenant_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'DW域-租户名称',
+                                         `dinky_tenant_id` int NULL DEFAULT NULL COMMENT 'DS域-租户ID',
+                                         `dinky_tenant_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'DS域-租户CODE',
+                                         `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+                                         `creator` int(11) DEFAULT NULL  COMMENT 'creator',
+                                         `update_time` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+                                         `updater` int(11) DEFAULT NULL  COMMENT 'updater',
+                                         PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '中台与dinky租户映射表' ROW_FORMAT = DYNAMIC;
+
+CREATE TABLE `dw_dinky_user`  (
+                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+                                    `dw_user_id` bigint NULL DEFAULT NULL COMMENT 'DW域-租户ID',
+                                    `dw_user_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'DW域-租户名称',
+                                    `dinky_user_id` int NULL DEFAULT NULL COMMENT 'DS域-租户ID',
+                                    `dinky_user_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'DS域-租户CODE',
+                                    `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+                                    `creator` int(11) DEFAULT NULL  COMMENT 'creator',
+                                    `update_time` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+                                    `updater` int(11) DEFAULT NULL  COMMENT 'updater',
+                                    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '中台与dinky用户映射表' ROW_FORMAT = DYNAMIC;
 -- ----------------------------
 -- Records of dinky_udf_template
 -- ----------------------------
