@@ -202,4 +202,6 @@ public interface UserService extends ISuperService<User> {
      * @return A result object containing the user's new password.
      */
     Result<UserVo> resetPassword(Integer userId);
+
+    UserDTO buildUserInfo(Integer userId);
 }

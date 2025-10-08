@@ -23,9 +23,12 @@ import org.dinky.data.constant.DirConstant;
 import org.dinky.security.NoExitSecurityManager;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.alibaba.druid.proxy.DruidDriver;
@@ -39,8 +42,9 @@ import lombok.SneakyThrows;
  * @since 2021/5/28
  */
 @EnableTransactionManagement
-@SpringBootApplication(exclude = FreeMarkerAutoConfiguration.class)
+@SpringBootApplication(exclude = {FreeMarkerAutoConfiguration.class,SecurityAutoConfiguration.class,ManagementWebSecurityAutoConfiguration.class})
 @EnableCaching
+@EnableDiscoveryClient
 public class Dinky {
 
     static {

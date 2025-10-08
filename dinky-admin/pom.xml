@@ -379,6 +379,19 @@
             <groupId>org.dinky</groupId>
             <artifactId>dinky-alert-http</artifactId>
         </dependency>
+        <!-- 引入数据中台认证 -->
+        <dependency>
+            <groupId>cn.chinatelecom.ddaf</groupId>
+            <artifactId>ddaf-security-client-config</artifactId>
+            <version>2.1.8-SNAPSHOT</version>
+        </dependency>
+        <!-- Nacos Discovery -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2021.0.4.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
