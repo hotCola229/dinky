@@ -19,6 +19,7 @@
 
 package org.dinky.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dinky.data.constant.BaseConstant;
 import org.dinky.service.MenuService;
 import org.dinky.service.RoleService;
@@ -37,6 +38,7 @@ import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.core.collection.CollectionUtil;
 
 /** Permission service by sa-token. TODO add cache */
+@Slf4j
 @Component
 public class PermissionService implements StpInterface {
     @Autowired
@@ -55,6 +57,7 @@ public class PermissionService implements StpInterface {
     @Override
     public List<String> getPermissionList(Object userId, String loginType) {
         Preconditions.checkArgument(userId != null);
+        log.info("获取用户权限，userId: {}, loginType: {}", userId, loginType);
         int userIdNum = Integer.parseInt(userId.toString());
         Set<String> perms = new HashSet<String>();
         if (userIdNum == BaseConstant.ADMIN_ID) {
@@ -70,6 +73,7 @@ public class PermissionService implements StpInterface {
                 perms.addAll(menuService.selectMenuPermsByUserId(userIdNum));
             }
         }
+        log.info("用户权限集合：{}", perms);
         return new ArrayList<>(perms);
     }
 

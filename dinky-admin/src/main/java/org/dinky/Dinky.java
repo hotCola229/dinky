@@ -42,7 +42,12 @@ import lombok.SneakyThrows;
  * @since 2021/5/28
  */
 @EnableTransactionManagement
-@SpringBootApplication(exclude = {FreeMarkerAutoConfiguration.class,SecurityAutoConfiguration.class,ManagementWebSecurityAutoConfiguration.class})
+@SpringBootApplication(
+        exclude = {
+            FreeMarkerAutoConfiguration.class,
+            SecurityAutoConfiguration.class,
+            ManagementWebSecurityAutoConfiguration.class
+        })
 @EnableCaching
 @EnableDiscoveryClient
 public class Dinky {

@@ -19,19 +19,19 @@
 
 package org.dinky.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.dinky.data.model.rbac.DwDinkyTenant;
 import org.dinky.mapper.DwDinkyTenantMapper;
 import org.dinky.mybatis.service.impl.SuperServiceImpl;
-import org.dinky.service.*;
+import org.dinky.service.DwDinkyTenantService;
+
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * DwDinkyTenantServiceImpl
  */
 @Service
 @RequiredArgsConstructor
-public class DwDinkyTenantServiceImpl extends SuperServiceImpl<DwDinkyTenantMapper, DwDinkyTenant> implements DwDinkyTenantService {
-
-
-}
+public class DwDinkyTenantServiceImpl extends SuperServiceImpl<DwDinkyTenantMapper, DwDinkyTenant>
+        implements DwDinkyTenantService {}

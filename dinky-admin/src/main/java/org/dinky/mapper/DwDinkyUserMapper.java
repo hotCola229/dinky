@@ -19,10 +19,10 @@
 
 package org.dinky.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.dinky.data.model.rbac.DwDinkyTenant;
 import org.dinky.data.model.rbac.DwDinkyUser;
 import org.dinky.mybatis.mapper.SuperMapper;
+
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * DwDinkyTenantUserMapper
@@ -30,6 +30,4 @@ import org.dinky.mybatis.mapper.SuperMapper;
  * @since 2022/2/24 19:59
  */
 @Mapper
-public interface DwDinkyUserMapper extends SuperMapper<DwDinkyUser> {
-
-}
+public interface DwDinkyUserMapper extends SuperMapper<DwDinkyUser> {}
