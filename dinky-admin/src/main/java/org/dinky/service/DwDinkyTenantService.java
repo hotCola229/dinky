@@ -23,7 +23,4 @@ import org.dinky.data.model.rbac.DwDinkyTenant;
 import org.dinky.mybatis.service.ISuperService;
 
 /** DwDinkyTenantUserService */
-public interface DwDinkyTenantService extends ISuperService<DwDinkyTenant> {
-
-
-}
+public interface DwDinkyTenantService extends ISuperService<DwDinkyTenant> {}

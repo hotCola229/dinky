@@ -1,19 +1,41 @@
+/*
+ *
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package org.dinky.utils;
 
-import cn.chinatelecom.ddaf.security.context.DdafContextHolder;
-import cn.chinatelecom.ddaf.systemmanage.client.vo.UserVo;
-import cn.chinatelecom.ddaf.utils.JSONUtils;
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Base64;
+import java.util.Enumeration;
+import java.util.Objects;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Enumeration;
-import java.util.Objects;
+import com.alibaba.fastjson.JSONObject;
+
+import cn.chinatelecom.ddaf.security.context.DdafContextHolder;
+import cn.chinatelecom.ddaf.systemmanage.client.vo.UserVo;
+import cn.chinatelecom.ddaf.utils.JSONUtils;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * SecurityUtils
@@ -31,7 +53,6 @@ public class SecurityUtils {
     public static final String USER_INFO_HEADER = "X-Ddaf-Gateway-Api-Userinfo";
     public static final Long PLATFORM_MANGER_TENANT_ID = 0L;
 
-
     public static void initTenantId(HttpServletRequest request) {
         HttpServletRequest httpServletRequest = request;
         String encodedString = httpServletRequest.getHeader(USER_INFO_HEADER);
@@ -39,22 +60,22 @@ public class SecurityUtils {
         Long tenantId = -1L;
         DdafContextHolder.setUserVo(null);
         DdafContextHolder.setUsername(null);
-        try{
+        try {
             String decode = new String(Base64.getDecoder().decode(encodedString));
             String jsonString = JSONObject.parseObject(decode).toJSONString();
             userVo = JSONUtils.parseObject(jsonString, UserVo.class);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.debug("Can't decode or extract UserVo from the provided header, please check the encoded string");
         }
-        if(userVo != null){
+        if (userVo != null) {
             extractAndSetUserVoByHeader(userVo);
-            //若可以被解析，则记录下当前的userInfo header到TTL
+            // 若可以被解析，则记录下当前的userInfo header到TTL
             DdafContextHolder.setUserInfoHeader(encodedString);
-            log.info("set user info header: {}",encodedString);
+            log.info("set user info header: {}", encodedString);
             tenantId = userVo.getTenantId();
         }
         // 若无法取到tenantId(没传userInfo 或 客户端模式没有tenantId)，则尝试从header读取
-        if(tenantId == null || tenantId < 0L){
+        if (tenantId == null || tenantId < 0L) {
             Object tenantIdObj = httpServletRequest.getHeader(HEADER_TENANT_ID);
             if (tenantIdObj != null) {
                 String tenantIdStr = String.valueOf(tenantIdObj);
@@ -63,7 +84,7 @@ public class SecurityUtils {
             }
         }
 
-        //记录当前accessToken
+        // 记录当前accessToken
         String authorizationFromHeader = cn.chinatelecom.ddaf.utils.SecurityUtils.getAuthorizationFromHeader();
         if (StringUtils.hasText(authorizationFromHeader)) {
             DdafContextHolder.setAuthorization(authorizationFromHeader);
@@ -76,13 +97,13 @@ public class SecurityUtils {
         DdafContextHolder.setTenantId(tenantId);
     }
 
-    private static void extractAndSetUserVoByHeader(UserVo userVo){
+    private static void extractAndSetUserVoByHeader(UserVo userVo) {
         // decode to json and put to Context Holder
         DdafContextHolder.setUsername(userVo.getUsername());
         DdafContextHolder.setTenantId(userVo.getTenantId());
         DdafContextHolder.setUserVo(JSONUtils.toJsonString(userVo));
-        log.info("initiated the userVo: {}",userVo);
-        log.info("initTenantId Header tenantId: {}",userVo.getTenantId());
+        log.info("initiated the userVo: {}", userVo);
+        log.info("initTenantId Header tenantId: {}", userVo.getTenantId());
     }
 
     public static String getAuthorizationFromHeader() {
@@ -138,7 +159,6 @@ public class SecurityUtils {
         }
         return null;
     }
-
 
     public static void remove() {
         DdafContextHolder.remove();

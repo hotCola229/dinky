@@ -96,12 +96,12 @@ public class AdminController {
     @GetMapping("/current")
     @ApiOperation(value = "Current User Info", notes = "Current User Info")
     @SaCheckLogin
-    public Result<UserDTO> getCurrentUserInfo(@CookieValue(name = "tenantId") Integer tenantId) {
-        if (tenantId == null) {
+    public Result<UserDTO> getCurrentUserInfo(/*@CookieValue(name = "tenantId") Integer tenantId*/) {
+        /*if (tenantId == null) {
             throw NotLoginException.newInstance(
                     "LOCAL", NotLoginException.NOT_TOKEN, NotLoginException.NOT_TOKEN_MESSAGE, null);
-        }
-        return userService.queryCurrentUserInfo(tenantId);
+        }*/
+        return userService.queryCurrentUserInfo(null);
     }
 
     /**
