@@ -19,9 +19,11 @@
 
 package org.dinky.ws;
 
+import com.alibaba.fastjson.JSON;
 import org.dinky.assertion.Asserts;
 import org.dinky.data.vo.SseDataVo;
 import org.dinky.utils.JsonUtils;
+import org.dinky.utils.SecurityUtils;
 import org.dinky.utils.ThreadUtil;
 import org.dinky.ws.topic.BaseTopic;
 
@@ -96,6 +98,7 @@ public class GlobalWebSocket {
     @OnOpen
     public void onOpen(Session session) {
         session.setMaxIdleTimeout(30000);
+        log.info("WS OPEN: sessionId={} user={}", session.getId(), SecurityUtils.getUserVo());
     }
 
     @OnClose
@@ -107,15 +110,18 @@ public class GlobalWebSocket {
     public void onMessage(String message, Session session) throws IOException {
         try {
             RequestDTO requestDTO = JsonUtils.parseObject(message, RequestDTO.class);
-            if (requestDTO == null || StpUtil.getLoginIdByToken(requestDTO.getToken()) == null) {
+            /*if (requestDTO == null || StpUtil.getLoginIdByToken(requestDTO.getToken()) == null) {
                 // unregister
+                log.error("requestDTO:{} login:{}", requestDTO, StpUtil.getLoginIdByToken(requestDTO.getToken()));
+                log.error("bad ws message unregister msg:{}", message);
                 TOPICS.remove(session);
                 return;
-            }
+            }*/
+            log.info("WS: sessionId={}, message={} requestType={}", session.getId(), message, requestDTO.getType());
 
             if (requestDTO.getType() == RequestDTO.EventType.PING) {
                 SseDataVo data = new SseDataVo(session.getId(), RequestDTO.EventType.PONG);
-                session.getBasicRemote().sendText(JsonUtils.toJsonString(data));
+                session.getAsyncRemote().sendText(JsonUtils.toJsonString(data));
                 return;
             }
 
@@ -134,6 +140,12 @@ public class GlobalWebSocket {
 
     @OnError
     public void onError(Session session, Throwable error) {
+        log.error(
+                "WS ERROR: sessionId={}, error={}",
+                session.getId(),
+                error.getMessage(),
+                error
+        );
         onClose(session);
     }
 
@@ -148,29 +160,35 @@ public class GlobalWebSocket {
                         temp.put(topic, params);
                     }
                 }));
+//        log.info("WS: getRequestParamMap:{}", temp);
         return temp;
     }
 
     private void firstSend() {
         Map<GlobalWebSocketTopic, Set<String>> allParams = getRequestParamMap();
+//        log.info("WS: firstSend sendTopic");
         // Send data
         allParams.forEach(
                 (topic, params) -> sendTopic(topic, params, topic.getInstance().firstDataSend(params)));
     }
 
     public void sendTopic(GlobalWebSocketTopic topic, Set<String> params, Map<String, Object> result) {
+//        log.info("WS: sendTopic:{}", topic);
         TOPICS.forEach((session, topics) -> {
+//            log.info("WS: session:{}, topics:{}", session.getId(), JSON.toJSONString(topics.getTopics()));
             if (topics.getTopics().containsKey(topic)) {
                 try {
                     SseDataVo data = new SseDataVo(
                             session.getId(), topic.name(), params == null ? result.get(BaseTopic.NONE_PARAMS) : result);
 
-                    session.getBasicRemote().sendText(JsonUtils.toJsonString(data));
+                    session.getAsyncRemote().sendText(JsonUtils.toJsonString(data));
 
                 } catch (Exception e) {
                     log.error("Error sending sse data:{}", e.getMessage());
                     SpringUtil.getBean(GlobalWebSocket.class).onError(session, e);
                 }
+            }else {
+                log.warn("WS: session:{}, not contains topic:{}", session.getId(), topic);
             }
         });
     }
@@ -185,15 +203,10 @@ public class GlobalWebSocket {
         }));
 
         tempMap.forEach((session, params) -> {
-            try {
-                Map<String, Object> sendData = new HashMap<>();
-                params.forEach(p -> sendData.put(p, paramsAndData.get(p)));
-                SseDataVo sseDataVo = new SseDataVo(session.getId(), topic.name(), sendData);
-                session.getBasicRemote().sendText(JsonUtils.toJsonString(sseDataVo));
-            } catch (IOException e) {
-                log.error("Error sending sse data:{}", e.getMessage());
-                SpringUtil.getBean(GlobalWebSocket.class).onError(session, e);
-            }
+            Map<String, Object> sendData = new HashMap<>();
+            params.forEach(p -> sendData.put(p, paramsAndData.get(p)));
+            SseDataVo sseDataVo = new SseDataVo(session.getId(), topic.name(), sendData);
+            session.getAsyncRemote().sendText(JsonUtils.toJsonString(sseDataVo));
         });
     }
 }

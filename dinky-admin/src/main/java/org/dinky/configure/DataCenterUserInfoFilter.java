@@ -105,6 +105,9 @@ public class DataCenterUserInfoFilter implements Filter {
                     reBuildUserInfo.setCurrentTenant(currentTenant);
                     log.info("数据中台用户{}认证成功，映射dinky用户{}", userVo.getUsername(), JSON.toJSONString(reBuildUserInfo));
                     UserInfoContextHolder.set(dinkyUserId, reBuildUserInfo);
+                    // 设置当前租户信息
+                    log.info("设置当前租户id为:{}", currentTenant.getId());
+                    TenantContextHolder.set(currentTenant.getId());
                 }
             }
             chain.doFilter(request, response);

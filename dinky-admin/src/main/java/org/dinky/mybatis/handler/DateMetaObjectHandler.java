@@ -100,6 +100,7 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
                 Opt<Object> loginTenantId = Opt.ofNullable(TenantContextHolder.get());
                 loginTenantId.ifPresent(loginTenantId1 -> {
                     if (loginTenantId1 instanceof Integer) {
+                        log.info("填充租户ID为：{}", loginTenantId1);
                         setFieldValByName(mybatisPlusFillProperties.getTenantIdField(), loginTenantId1, metaObject);
                     }
                 });
