@@ -98,7 +98,7 @@ public class GlobalWebSocket {
     @OnOpen
     public void onOpen(Session session) {
         session.setMaxIdleTimeout(30000);
-        log.info("WS OPEN: sessionId={} user={}", session.getId(), SecurityUtils.getUserVo());
+        //log.info("WS OPEN: sessionId={} user={}", session.getId(), SecurityUtils.getUserVo());
     }
 
     @OnClose
@@ -117,7 +117,7 @@ public class GlobalWebSocket {
                 TOPICS.remove(session);
                 return;
             }*/
-            log.info("WS: sessionId={}, message={} requestType={}", session.getId(), message, requestDTO.getType());
+            //log.info("WS: sessionId={}, message={} requestType={}", session.getId(), message, requestDTO.getType());
 
             if (requestDTO.getType() == RequestDTO.EventType.PING) {
                 SseDataVo data = new SseDataVo(session.getId(), RequestDTO.EventType.PONG);

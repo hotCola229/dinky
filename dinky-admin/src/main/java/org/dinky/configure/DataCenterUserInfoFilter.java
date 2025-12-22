@@ -93,7 +93,7 @@ public class DataCenterUserInfoFilter implements Filter {
             // 检查数据中台token
             UserVo userVo = SecurityUtils.getUserVo();
             if (Objects.nonNull(userVo)) {
-                log.info("进行数据中台用户认证");
+                //log.info("进行数据中台用户认证");
                 if(StpUtil.isLogin()){
                     log.info("dinky 已登录:{}", StpUtil.getLoginIdAsInt());
                 }else {
@@ -103,10 +103,10 @@ public class DataCenterUserInfoFilter implements Filter {
                     // 设置当前租户信息
                     Tenant currentTenant = tenantService.getById(1);
                     reBuildUserInfo.setCurrentTenant(currentTenant);
-                    log.info("数据中台用户{}认证成功，映射dinky用户{}", userVo.getUsername(), JSON.toJSONString(reBuildUserInfo));
+                    //log.info("数据中台用户{}认证成功，映射dinky用户{}", userVo.getUsername(), JSON.toJSONString(reBuildUserInfo));
                     UserInfoContextHolder.set(dinkyUserId, reBuildUserInfo);
                     // 设置当前租户信息
-                    log.info("设置当前租户id为:{}", currentTenant.getId());
+                    //log.info("设置当前租户id为:{}", currentTenant.getId());
                     TenantContextHolder.set(currentTenant.getId());
                 }
             }

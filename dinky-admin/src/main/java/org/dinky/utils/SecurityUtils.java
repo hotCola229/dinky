@@ -71,7 +71,7 @@ public class SecurityUtils {
             extractAndSetUserVoByHeader(userVo);
             // 若可以被解析，则记录下当前的userInfo header到TTL
             DdafContextHolder.setUserInfoHeader(encodedString);
-            log.info("set user info header: {}", encodedString);
+            //log.info("set user info header: {}", encodedString);
             tenantId = userVo.getTenantId();
         }
         // 若无法取到tenantId(没传userInfo 或 客户端模式没有tenantId)，则尝试从header读取
@@ -93,7 +93,7 @@ public class SecurityUtils {
         if (tenantId == null) {
             tenantId = -1L;
         }
-        log.info("initTenantId set tenantId:{}", tenantId);
+        //log.info("initTenantId set tenantId:{}", tenantId);
         DdafContextHolder.setTenantId(tenantId);
     }
 
@@ -102,8 +102,8 @@ public class SecurityUtils {
         DdafContextHolder.setUsername(userVo.getUsername());
         DdafContextHolder.setTenantId(userVo.getTenantId());
         DdafContextHolder.setUserVo(JSONUtils.toJsonString(userVo));
-        log.info("initiated the userVo: {}", userVo);
-        log.info("initTenantId Header tenantId: {}", userVo.getTenantId());
+        //log.info("initiated the userVo: {}", userVo);
+        //log.info("initTenantId Header tenantId: {}", userVo.getTenantId());
     }
 
     public static String getAuthorizationFromHeader() {
